@@ -1,11 +1,12 @@
 {-# Language OverloadedStrings, FlexibleContexts #-}
-module Day01 where
+module Advent.Day01 where
 
 import Control.Monad.Except
 import Data.List (unfoldr)
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
 import qualified Data.Text.Read as T
+import qualified Advent.Day01Input as Input
 
 moduleFuel :: Int -> Int
 moduleFuel mass =
@@ -31,27 +32,20 @@ tests =
       , (100756, 33583, 50346)
       ]
 
-type Error = String -- sorry
+type Mass = Int -- sorry
 
-getTotalFuel :: (Int -> Int) -> T.Text -> Either Error Int
-getTotalFuel fuelCalc input =
-   let
-        readMass t = case T.decimal t of
-            Left s -> throwError s
-            Right (m, "") -> pure m
-            Right (_, rest) -> throwError . T.unpack $ "Incomplete parse: " <> rest
-        totalFuel = fmap (sum . map fuelCalc) . traverse readMass . T.words
-    in totalFuel input
+getTotalFuel :: (Int -> Int) -> [Mass] -> Int
+getTotalFuel fuelCalc =
+    sum . map fuelCalc
 
-moduleFuelFixed :: Int -> Int
+moduleFuelFixed :: Mass -> Int
 moduleFuelFixed mass =
     let initialFuel = moduleFuel mass
         additionalFuel m = if m<=0 then Nothing else Just (m, moduleFuel m)
     in sum . unfoldr additionalFuel $ initialFuel
 
 main :: IO ()
-main = do
-    input <- T.readFile "input.txt"
-    let total1 = getTotalFuel moduleFuel input
-    let total2 = getTotalFuel moduleFuelFixed input
-    print (total1, total2)
+main = 
+    let total1 = getTotalFuel moduleFuel Input.input
+        total2 = getTotalFuel moduleFuelFixed Input.input
+    in print (total1, total2)
