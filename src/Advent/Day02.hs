@@ -7,7 +7,9 @@ module Advent.Day02 (
     toIntCode,
     step,
     run,
-    runDay02
+    runDay02,
+    runDay02Part2,
+    answerDay02Part2
 ) where
 
 import Control.Monad.Except
@@ -69,4 +71,20 @@ runDay02 =
     let input = toIntCode Input.input // [(1, 12), (2, 2)]
     in run input
 
+output :: ProgramState -> Maybe Int
+output s = headM $ case s of
+    Running _ x -> x
+    Halted x -> x
+    Crash _ x -> x
 
+runDay02Part2 :: Maybe (Int, Int)
+runDay02Part2 =
+    let
+      validInputs = [0..99]
+      fromNounVerb (x,y) = [(1, x), (2, y)]
+      allInputs = (,) <$> validInputs <*> validInputs
+      runInput x = run (toIntCode Input.input // fromNounVerb x)
+    in
+      find (\input -> output (runInput input) == Just 19690720) (V.fromList allInputs)
+answerDay02Part2 :: Maybe Int
+answerDay02Part2 = (\(n,v) -> 100 * n + v) <$> runDay02Part2
