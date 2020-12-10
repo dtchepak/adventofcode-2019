@@ -12,7 +12,6 @@ module Advent.Day02 (
     answerDay02Part2
 ) where
 
-import Control.Monad.Except
 import Data.Vector as V
 import Data.Vector.Mutable (write)
 import qualified Advent.Day02Input as Input

@@ -40,10 +40,11 @@ test-suite adventofcode2019-test
   import:              common-options
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
-  main-is:             AdventTests.hs
-  other-modules:       Test.Advent.Day01
-                     , Test.Advent.Day02
+  main-is:             Spec.hs
   build-depends:       adventofcode2019
-                     , test-framework
-                     , test-framework-hunit
-                     , HUnit
+                     , hspec ^>=2.7.4
+  build-tool-depends:  hspec-discover:hspec-discover == 2.*
+  ghc-options:         -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
+                       -Wno-missing-home-modules
